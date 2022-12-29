@@ -1,6 +1,6 @@
-import 'package:done/src/ui/app/app_drawer.dart';
+import 'package:done/src/ui/app/drawer/app_drawer.dart';
 import 'package:done/src/ui/calendar/calendar_view.dart';
-import 'package:done/src/ui/home/home_view.dart';
+import 'package:done/src/ui/home/home_screen.dart';
 import 'package:done/src/ui/settings/settings_view.dart';
 import 'package:flutter/material.dart';
 
@@ -15,10 +15,11 @@ class NavigatingPoint extends StatefulWidget {
 
 class _NavigatingPointState extends State<NavigatingPoint> {
   int currentIndex = 0;
+
   final views = [
-    const HomeView(),
-    const CalendarView(),
-    const SettingsView(),
+    const HomeScreen(),
+    const CalendarScreen(),
+    const SettingScreen(),
   ];
 
   _changeIndex(index) => setState(() {
@@ -52,3 +53,5 @@ class _NavigatingPointState extends State<NavigatingPoint> {
     );
   }
 }
+
+enum Screen { home, calendar, setting }
