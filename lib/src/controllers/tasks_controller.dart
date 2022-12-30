@@ -5,10 +5,23 @@ import 'package:flutter/widgets.dart';
 
 class TasksController extends ChangeNotifier {
   final List<Task> _tasks = [
-    const Task(
-      id: 1,
-      title: 'Move the lawn',
-      details: 'Detail move',
+    ...List.generate(
+      3,
+      (index) => const Task(
+        id: 1,
+        title: 'Move the lawn',
+        details: 'Detail move',
+        onFavorite: true,
+      ),
+    ),
+    ...List.generate(
+      3,
+      (index) => const Task(
+        id: 2,
+        title: 'Move the lawn',
+        details: 'Detail move',
+        completed: true,
+      ),
     ),
   ];
 

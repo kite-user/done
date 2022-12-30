@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 class DefaultSection extends StatelessWidget {
   const DefaultSection({
     Key? key,
-    required this.title,
   }) : super(key: key);
-
-  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +19,6 @@ class DefaultSection extends StatelessWidget {
           icon: Icon(Icons.light_mode_rounded),
           title: 'Today',
           badge: 12,
-          active: true,
         ),
         ListItem(
           icon: Icon(Icons.star_border_rounded),

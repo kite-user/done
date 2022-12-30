@@ -5,7 +5,7 @@ class ListItem extends StatelessWidget {
     Key? key,
     required this.icon,
     required this.title,
-    required this.badge,
+    this.badge = 0,
     this.active = false,
   }) : super(key: key);
 

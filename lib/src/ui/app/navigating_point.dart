@@ -1,7 +1,7 @@
 import 'package:done/src/ui/app/drawer/app_drawer.dart';
-import 'package:done/src/ui/calendar/calendar_view.dart';
+import 'package:done/src/ui/calendar/calendar_screen.dart';
 import 'package:done/src/ui/home/home_screen.dart';
-import 'package:done/src/ui/settings/settings_view.dart';
+import 'package:done/src/ui/settings/setting_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigatingPoint extends StatefulWidget {

@@ -6,6 +6,7 @@ class Task extends Equatable {
   final String details;
   final DateTime? time;
   final bool completed;
+  final bool onFavorite;
 
   const Task({
     required this.id,
@@ -13,10 +14,11 @@ class Task extends Equatable {
     required this.details,
     this.time,
     this.completed = false,
+    this.onFavorite = false,
   });
 
   @override
-  List<Object?> get props => [completed, id, title, time, details];
+  List<Object?> get props => [completed, onFavorite, id, title, time, details];
 
   Task copyWith({
     int? id,

@@ -1,41 +1,18 @@
 import 'package:flutter/material.dart';
 
-class ListItem extends StatefulWidget {
+class ListItem extends StatelessWidget {
   const ListItem({
     Key? key,
+    required this.title,
+    this.subtitle,
     this.checked = false,
     this.onFavorite = false,
   }) : super(key: key);
 
+  final String title;
+  final String? subtitle;
   final bool checked;
   final bool onFavorite;
-
-  @override
-  State<ListItem> createState() => _ListItemState();
-}
-
-class _ListItemState extends State<ListItem> {
-  late bool checked;
-  late bool onFavorite;
-
-  @override
-  void initState() {
-    super.initState();
-    checked = widget.checked;
-    onFavorite = widget.onFavorite;
-  }
-
-  void _setChecked() {
-    setState(() {
-      checked = !checked;
-    });
-  }
-
-  void _setOnFavorite() {
-    setState(() {
-      onFavorite = !onFavorite;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,21 +33,29 @@ class _ListItemState extends State<ListItem> {
           icon: checked
               ? const Icon(Icons.check_box_rounded)
               : const Icon(Icons.check_box_outline_blank_rounded),
-          onPressed: _setChecked,
+          onPressed: () {},
         ),
         title: Text(
-          'List item',
-          style: Theme.of(context).textTheme.bodyLarge,
+          title,
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                decoration: checked ? TextDecoration.lineThrough : null,
+                decorationThickness: 2,
+              ),
         ),
-        subtitle: Text(
-          'Supporting text',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
+        subtitle: subtitle != null
+            ? Text(
+                subtitle!,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      decoration: checked ? TextDecoration.lineThrough : null,
+                      decorationThickness: 1.5,
+                    ),
+              )
+            : null,
         trailing: IconButton(
           icon: onFavorite
               ? const Icon(Icons.star_rounded)
               : const Icon(Icons.star_border_rounded),
-          onPressed: _setOnFavorite,
+          onPressed: () {},
         ),
       ),
     );
