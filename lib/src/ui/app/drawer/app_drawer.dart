@@ -1,3 +1,4 @@
+import 'package:done/src/ui/app/drawer/bottom_sheet_content.dart';
 import 'package:done/src/ui/app/drawer/default_section.dart';
 import 'package:done/src/ui/app/drawer/personal_section.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () => _showAddListBottomSheet(context),
               child: Padding(
                 padding: const EdgeInsets.only(
                   left: 12,
@@ -54,7 +55,7 @@ class AppDrawer extends StatelessWidget {
                   children: const [
                     Icon(Icons.add_rounded),
                     SizedBox(width: 8),
-                    Text('Add '),
+                    Text('Add list'),
                   ],
                 ),
               ),
@@ -62,6 +63,37 @@ class AppDrawer extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> _showAddListBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      enableDrag: false,
+      builder: (context) {
+        return BottomSheet(
+          enableDrag: false,
+          onClosing: () {},
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
+          ),
+          builder: (BuildContext context) {
+            return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: const BottomSheetContent(),
+            );
+          },
+        );
+      },
     );
   }
 }
