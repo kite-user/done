@@ -8,6 +8,8 @@ class Task extends Equatable {
   final DateTime? time;
   final bool completed;
   final bool onFavorite;
+  final String? listId;
+  final bool onTrash;
 
   const Task({
     required this.id,
@@ -16,10 +18,20 @@ class Task extends Equatable {
     this.time,
     this.completed = false,
     this.onFavorite = false,
+    this.onTrash = false,
+    this.listId,
   });
 
   @override
-  List<Object?> get props => [completed, onFavorite, id, title, time, details];
+  List<Object?> get props => [
+        completed,
+        onFavorite,
+        id,
+        title,
+        time,
+        details,
+        onTrash,
+      ];
 
   Task copyWith({
     String? id,
@@ -37,5 +49,18 @@ class Task extends Equatable {
       completed: completed ?? this.completed,
       onFavorite: onFavorite ?? this.onFavorite,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'details': details,
+      'time': time,
+      'completed': completed,
+      'favorited': onFavorite,
+      'list_id': listId,
+      'trash': onTrash,
+    };
   }
 }

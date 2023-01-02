@@ -11,4 +11,16 @@ class TaskList extends Equatable {
 
   @override
   List<Object?> get props => [id, name];
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
+
+  factory TaskList.fromMap(Map<String, dynamic> json) => TaskList(
+        id: json['id'],
+        name: json['name'],
+      );
 }

@@ -1,31 +1,45 @@
 import 'dart:collection';
 
 import 'package:done/src/models/tasklist.dart';
+import 'package:done/src/repository/app_repository.dart';
 import 'package:flutter/widgets.dart';
 import 'package:uuid/uuid.dart';
 
 class TaskListsController extends ChangeNotifier {
-  final List<TaskList> _taskLists = [
-    ...List.generate(
-      4,
-      (index) => TaskList(id: const Uuid().v4(), name: 'Clone'),
-    ),
-  ];
+  final AppRepository repository;
+
+  final List<TaskList> _taskLists = [];
+
+  TaskListsController(
+    this.repository,
+  );
+
+  Future loadData() async {
+    return repository.getTaskLists().then((data) {
+      _taskLists.addAll(data);
+      notifyListeners();
+    }).catchError((err) {
+      // print(err);
+      notifyListeners();
+    });
+  }
 
   UnmodifiableListView<TaskList> get tasklists =>
       UnmodifiableListView(_taskLists);
 
   Future<void> addList(TaskList list) async {
+    await repository.addTaskList(list);
     _taskLists.add(list);
     notifyListeners();
   }
 
   Future<void> createList(String name) async {
-    _taskLists.add(TaskList(id: const Uuid().v4(), name: name));
+    final newList = TaskList(id: const Uuid().v4(), name: name);
+    _taskLists.add(newList);
     notifyListeners();
   }
 
-  Future<void> deleteTask(TaskList list) async {
+  Future<void> deleteList(TaskList list) async {
     _taskLists.remove(list);
     notifyListeners();
   }
