@@ -28,12 +28,14 @@ class ProgressSection extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: list.length,
           itemBuilder: (_, index) {
+            final id = list[index].id;
             final title = list[index].title;
             final details = list[index].details;
             final completed = list[index].completed;
             final onFavorite = list[index].onFavorite;
 
             return ListItem(
+              id: id,
               title: title,
               subtitle: details,
               checked: completed,

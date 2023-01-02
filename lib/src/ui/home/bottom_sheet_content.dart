@@ -1,4 +1,6 @@
+import 'package:done/src/controllers/tasks_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BottomSheetContent extends StatefulWidget {
   const BottomSheetContent({
@@ -12,33 +14,55 @@ class BottomSheetContent extends StatefulWidget {
 class _BottomSheetContentState extends State<BottomSheetContent> {
   var isShowDetailField = false;
 
-  _setShowDetailField() => setState(() {
-        isShowDetailField = !isShowDetailField;
+  late TextEditingController _titleController;
+  late TextEditingController _detailsController;
+
+  @override
+  initState() {
+    super.initState();
+    _titleController = TextEditingController()
+      ..addListener(() {
+        setState(() {});
       });
+    _detailsController = TextEditingController()
+      ..addListener(() {
+        setState(() {});
+      });
+  }
+
+  _setShowDetailField() {
+    setState(() {
+      isShowDetailField = !isShowDetailField;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final tasksController = context.watch<TasksController>();
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(height: 16),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: TextField(
+            controller: _titleController,
             autofocus: true,
             textInputAction: TextInputAction.unspecified,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'New task',
               border: InputBorder.none,
             ),
           ),
         ),
         isShowDetailField
-            ? const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
+                  controller: _detailsController,
                   textInputAction: TextInputAction.unspecified,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Details',
                     border: InputBorder.none,
                   ),
@@ -71,7 +95,12 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton(
-                onPressed: isShowDetailField ? () {} : null,
+                onPressed: _titleController.text.isNotEmpty ||
+                        _detailsController.text.isNotEmpty
+                    ? () => tasksController
+                        .createTask(_titleController.text)
+                        .then((_) => Navigator.pop(context))
+                    : null,
                 child: const Text('Save'),
               ),
             ),

@@ -1,14 +1,18 @@
+import 'package:done/src/controllers/tasks_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListItem extends StatelessWidget {
   const ListItem({
     Key? key,
+    required this.id,
     required this.title,
     this.subtitle,
     this.checked = false,
     this.onFavorite = false,
   }) : super(key: key);
 
+  final String id;
   final String title;
   final String? subtitle;
   final bool checked;
@@ -16,6 +20,8 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tasksController = context.watch<TasksController>();
+
     return Dismissible(
       key: const ValueKey('string'),
       direction: DismissDirection.startToEnd,
@@ -33,7 +39,7 @@ class ListItem extends StatelessWidget {
           icon: checked
               ? const Icon(Icons.check_box_rounded)
               : const Icon(Icons.check_box_outline_blank_rounded),
-          onPressed: () {},
+          onPressed: () => tasksController.update(id, completed: !checked),
         ),
         title: Text(
           title,
@@ -55,7 +61,7 @@ class ListItem extends StatelessWidget {
           icon: onFavorite
               ? const Icon(Icons.star_rounded)
               : const Icon(Icons.star_border_rounded),
-          onPressed: () {},
+          onPressed: () => tasksController.update(id, onFavorite: !onFavorite),
         ),
       ),
     );

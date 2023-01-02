@@ -2,13 +2,14 @@ import 'dart:collection';
 
 import 'package:done/src/models/task.dart';
 import 'package:flutter/widgets.dart';
+import 'package:uuid/uuid.dart';
 
 class TasksController extends ChangeNotifier {
   final List<Task> _tasks = [
     ...List.generate(
       3,
-      (index) => const Task(
-        id: 1,
+      (index) => Task(
+        id: const Uuid().v4(),
         title: 'Move the lawn',
         details: 'Detail move',
         onFavorite: true,
@@ -16,8 +17,8 @@ class TasksController extends ChangeNotifier {
     ),
     ...List.generate(
       3,
-      (index) => const Task(
-        id: 2,
+      (index) => Task(
+        id: const Uuid().v4(),
         title: 'Move the lawn',
         details: 'Detail move',
         completed: true,
@@ -27,25 +28,39 @@ class TasksController extends ChangeNotifier {
 
   UnmodifiableListView<Task> get tasks => UnmodifiableListView(_tasks);
 
-  Future<void> createTask(Task task) async {
+  Future<void> addTask(Task task) async {
     _tasks.add(task);
     notifyListeners();
   }
 
-  Future<void> update(Task task) async {
-    final taskIndex = _tasks.indexWhere((element) => element.id == task.id);
+  Future<void> createTask(String title) async {
+    final task = Task(id: const Uuid().v4(), title: title);
+    addTask(task);
+    notifyListeners();
+  }
+
+  Future<void> update(String id,
+      {String? title,
+      String? details,
+      DateTime? time,
+      bool? completed,
+      bool? onFavorite}) async {
+    final taskIndex = _tasks.indexWhere((element) => element.id == id);
     _tasks[taskIndex] = _tasks[taskIndex].copyWith(
-      title: task.title,
-      details: task.details,
-      time: task.time,
-      completed: task.completed,
+      id: id,
+      title: title,
+      details: details,
+      time: time,
+      completed: completed,
+      onFavorite: onFavorite,
     );
 
     notifyListeners();
   }
 
-  Future<void> deleteTask(Task task) async {
-    _tasks.remove(task);
+  Future<void> deleteTask(String id) async {
+    final taskIndex = _tasks.indexWhere((element) => element.id == id);
+    _tasks.removeAt(taskIndex);
     notifyListeners();
   }
 }

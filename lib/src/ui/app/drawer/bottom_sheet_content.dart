@@ -1,10 +1,30 @@
+import 'package:done/src/controllers/tasklists_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class BottomSheetContent extends StatelessWidget {
+class BottomSheetContent extends StatefulWidget {
   const BottomSheetContent({super.key});
 
   @override
+  State<BottomSheetContent> createState() => _BottomSheetContentState();
+}
+
+class _BottomSheetContentState extends State<BottomSheetContent> {
+  late TextEditingController _inputController;
+
+  @override
+  void initState() {
+    super.initState();
+    _inputController = TextEditingController()
+      ..addListener(() {
+        setState(() {});
+      });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final taskListsController = context.watch<TaskListsController>();
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -18,19 +38,24 @@ class BottomSheetContent extends StatelessWidget {
                 child: const Text('Cancel'),
               ),
               const Text('Add list'),
-              const TextButton(
-                onPressed: null,
-                child: Text('Done'),
-              )
+              TextButton(
+                onPressed: _inputController.text.isNotEmpty
+                    ? () => taskListsController
+                        .createList(_inputController.text)
+                        .then((_) => Navigator.pop(context))
+                    : null,
+                child: const Text('Done'),
+              ),
             ],
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: TextField(
+            controller: _inputController,
             autofocus: true,
             textInputAction: TextInputAction.unspecified,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Enter list title',
               border: InputBorder.none,
             ),
