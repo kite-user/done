@@ -1,3 +1,4 @@
+import 'package:done/src/controllers/app_state.dart';
 import 'package:done/src/controllers/tasklists_controller.dart';
 import 'package:done/src/controllers/tasks_controller.dart';
 import 'package:done/src/repository/app_repository.dart';
@@ -21,6 +22,7 @@ class DoneApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => TaskListsController(repository)..loadData(),
         ),
+        ChangeNotifierProvider(create: (_) => AppState()),
         ChangeNotifierProvider(create: (_) => TasksController(repository)),
       ],
       child: MaterialApp(

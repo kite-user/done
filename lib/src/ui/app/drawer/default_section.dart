@@ -16,19 +16,22 @@ class DefaultSection extends StatelessWidget {
           title: 'Default',
         ),
         ListItem(
-          icon: Icon(Icons.light_mode_rounded),
+          id: 'today',
           title: 'Today',
-          badge: 12,
+          icon: Icon(Icons.light_mode_rounded),
+          badge: 0,
         ),
         ListItem(
-          icon: Icon(Icons.star_border_rounded),
+          id: 'favorites',
           title: 'Favorites',
-          badge: 12,
+          icon: Icon(Icons.star_border_rounded),
+          badge: 0,
         ),
         ListItem(
-          icon: Icon(Icons.delete_outline_rounded),
+          id: 'trash',
           title: 'Trash',
-          badge: 100,
+          icon: Icon(Icons.delete_outline_rounded),
+          badge: 0,
         ),
       ],
     );

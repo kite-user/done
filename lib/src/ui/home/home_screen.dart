@@ -1,14 +1,20 @@
+import 'package:done/src/controllers/app_state.dart';
+import 'package:done/src/controllers/tasklists_controller.dart';
 import 'package:done/src/ui/home/bottom_sheet_content.dart';
 import 'package:done/src/ui/home/completed_section.dart';
 import 'package:done/src/ui/home/progress_section.dart';
 import 'package:done/src/ui/home/search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppState>();
+    final taskListController = context.watch<TaskListsController>();
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       floatingActionButton: FloatingActionButton.extended(
@@ -23,13 +29,22 @@ class HomeScreen extends StatelessWidget {
             pinned: true,
             snap: false,
             elevation: 0,
-            title: const Text('Today'),
+            title: Text(appState.currentListName),
             centerTitle: true,
             leading: IconButton(
               onPressed: Scaffold.of(context).openDrawer,
               icon: const Icon(Icons.menu),
             ),
             actions: [
+              !appState.defaultId.contains(appState.currentListId)
+                  ? IconButton(
+                      onPressed: () {
+                        taskListController.deleteList(appState.currentListId);
+                        appState.changeListId(id: 'today', name: 'Today');
+                      },
+                      icon: const Icon(Icons.delete_rounded),
+                    )
+                  : Container(),
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.more_horiz_rounded),

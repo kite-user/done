@@ -29,6 +29,7 @@ class PersonalSection extends StatelessWidget {
           itemCount: taskLists.length,
           itemBuilder: (context, index) {
             return ListItem(
+              id: taskLists[index].id,
               icon: const Icon(Icons.note_rounded),
               title: taskLists[index].name,
               badge: 0,

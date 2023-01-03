@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:done/src/models/task.dart';
 import 'package:done/src/models/tasklist.dart';
 import 'package:done/src/repository/app_repository.dart';
@@ -13,17 +15,76 @@ class SQLiteRepository extends AppRepository {
   Future<Database> _initDatabase() async {
     return await openDatabase(
       join(await getDatabasesPath(), 'done_app.db'),
-      version: 1,
+      version: 2,
       onCreate: _createTables,
+      onUpgrade: _upgradeTables,
+      onDowngrade: _downgradeTables,
     );
+  }
+
+  Future<void> _upgradeTables(Database db, int oldVersion, int newVersion) {
+    return db.execute('''
+      DROP TABLE IF EXISTS task_lists;
+      DROP TABLE IF EXISTS tasks;
+
+      CREATE TABLE task_lists(
+        id TEXT PRIMARY KEY,
+        name TEXT 
+      ); 
+
+      CREATE TABLE tasks(
+        id TEXT PRIMARY KEY,
+        title TEXT,
+        details TEXT,
+        time TEXT,
+        completed INTEGER,
+        favorite INTEGER,
+        list_id TEXT REFERENCES task_lists(id),
+        trash INTEGER
+      );
+    ''');
   }
 
   Future<void> _createTables(Database db, int version) {
     return db.execute('''
+      CREATE TABLE IF NOT EXISTS task_lists(
+        id TEXT PRIMARY KEY,
+        name TEXT 
+      ); 
+
+      CREATE TABLE IF NOT EXISTS tasks(
+        id TEXT PRIMARY KEY,
+        title TEXT,
+        details TEXT,
+        time TEXT,
+        completed INTEGER,
+        favorite INTEGER,
+        list_id TEXT,
+        trash INTEGER
+      );
+    ''');
+  }
+
+  FutureOr<void> _downgradeTables(Database db, int oldVersion, int newVersion) {
+    return db.execute('''
+      DROP TABLE IF EXISTS task_lists;
+      DROP TABLE IF EXISTS tasks;
+
       CREATE TABLE task_lists(
         id TEXT PRIMARY KEY,
         name TEXT 
-      ) 
+      ); 
+
+      CREATE TABLE tasks(
+        id TEXT PRIMARY KEY,
+        title TEXT,
+        details TEXT,
+        time TEXT,
+        completed INTEGER,
+        favorite INTEGER,
+        list_id TEXT REFERENCES task_lists(id),
+        trash INTEGER
+      );
     ''');
   }
 
@@ -57,25 +118,21 @@ class SQLiteRepository extends AppRepository {
 
   @override
   Future<void> addTask(Task task) {
-    // TODO: implement addTask
     throw UnimplementedError();
   }
 
   @override
   Future<void> deleteTask(Task task) {
-    // TODO: implement deleteTask
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Task>> getTasks() {
-    // TODO: implement getTasks
     throw UnimplementedError();
   }
 
   @override
   Future<void> updateTask(Task task) {
-    // TODO: implement updateTask
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Task>> getTasks(TaskList list) {
     throw UnimplementedError();
   }
 }

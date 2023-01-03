@@ -13,15 +13,7 @@ class TasksController extends ChangeNotifier {
 
   UnmodifiableListView<Task> get tasks => UnmodifiableListView(_tasks);
 
-  Future loadData() async {
-    return repository.getTasks().then((data) {
-      _tasks.addAll(data);
-      notifyListeners();
-    }).catchError((err) {
-      // print(err);
-      notifyListeners();
-    });
-  }
+  Future loadData() async {}
 
   Future<void> addTask(Task task) async {
     _tasks.add(task);

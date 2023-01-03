@@ -35,7 +35,10 @@ class TaskListsController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteList(TaskList list) async {
+  Future<void> deleteList(String id) async {
+    int index = _taskLists.indexWhere((element) => element.id == id);
+    var list = _taskLists[index];
+
     await repository.deleteTaskList(list);
     _taskLists.remove(list);
 
