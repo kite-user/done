@@ -3,7 +3,6 @@ import 'package:done/src/controllers/tasklists_controller.dart';
 import 'package:done/src/ui/home/bottom_sheet_content.dart';
 import 'package:done/src/ui/home/completed_section.dart';
 import 'package:done/src/ui/home/progress_section.dart';
-import 'package:done/src/ui/home/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,10 +49,10 @@ class HomeScreen extends StatelessWidget {
                 icon: const Icon(Icons.more_horiz_rounded),
               )
             ],
-            bottom: const PreferredSize(
-              preferredSize: Size.fromHeight(50),
-              child: SearchBar(),
-            ),
+            // bottom: const PreferredSize(
+            //   preferredSize: Size.fromHeight(50),
+            //   child: SearchBar(),
+            // ),
           ),
           SliverList(
             delegate: SliverChildListDelegate(

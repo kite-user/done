@@ -56,11 +56,20 @@ class Task extends Equatable {
       'id': id,
       'title': title,
       'details': details,
-      'time': time,
+      'time': time == null ? time.toString() : '',
       'completed': completed,
       'favorited': onFavorite,
       'list_id': listId,
       'trash': onTrash,
     };
   }
+
+  factory Task.fromMap(Map<String, dynamic> json) => Task(
+        id: json['id'],
+        title: json['title'],
+        details: json['details'],
+        time: json['time'],
+        completed: json['completed'] == 1,
+        onFavorite: json['favorited'] == 1,
+      );
 }

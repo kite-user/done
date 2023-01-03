@@ -17,13 +17,16 @@ class DoneApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppState appState = AppState();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => TaskListsController(repository)..loadData(),
         ),
-        ChangeNotifierProvider(create: (_) => AppState()),
-        ChangeNotifierProvider(create: (_) => TasksController(repository)),
+        ChangeNotifierProvider(create: (_) => appState),
+        ChangeNotifierProvider(
+            create: (_) => TasksController(repository, appState)..construct()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

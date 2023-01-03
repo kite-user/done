@@ -1,4 +1,5 @@
 import 'package:done/src/controllers/tasks_controller.dart';
+import 'package:done/src/utils/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,9 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
   late TextEditingController _titleController;
   late TextEditingController _detailsController;
 
+  DateTime? currentDate;
+  bool onFavorite = false;
+
   @override
   initState() {
     super.initState();
@@ -30,103 +34,129 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
       });
   }
 
-  _setShowDetailField() {
-    setState(() {
-      isShowDetailField = !isShowDetailField;
-    });
+  _setShowDetailField() => setState(() {
+        isShowDetailField = !isShowDetailField;
+      });
+
+  _setOnFavorite() => setState(() {
+        onFavorite = !onFavorite;
+      });
+
+  _setCurrentDate(DateTime? time) => setState(() {
+        currentDate = time;
+      });
+
+  _addTask(TasksController controller) {
+    return controller.createTask(
+      title: _titleController.text,
+      details: _detailsController.text,
+      time: currentDate,
+      onFavorite: onFavorite,
+    );
+  }
+
+  Future<DateTime?> _showDatePicker(BuildContext context) {
+    return showDatePicker(
+      context: context,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1970),
+      lastDate: DateTime(3000),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final tasksController = context.watch<TasksController>();
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: TextField(
-            controller: _titleController,
-            autofocus: true,
-            textInputAction: TextInputAction.unspecified,
-            decoration: const InputDecoration(
-              hintText: 'New task',
-              border: InputBorder.none,
-            ),
-          ),
-        ),
-        isShowDetailField
-            ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: _detailsController,
-                  textInputAction: TextInputAction.unspecified,
-                  decoration: const InputDecoration(
-                    hintText: 'Details',
-                    border: InputBorder.none,
-                  ),
-                ),
-              )
-            : Container(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  isSelected: isShowDetailField,
-                  onPressed: _setShowDetailField,
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.menu_rounded),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.today_rounded),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.star_border_rounded),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ElevatedButton(
-                onPressed: _titleController.text.isNotEmpty ||
-                        _detailsController.text.isNotEmpty
-                    ? () => tasksController
-                        .createTask(_titleController.text)
-                        .then((_) => Navigator.pop(context))
-                    : null,
-                child: const Text('Save'),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              controller: _titleController,
+              autofocus: true,
+              textInputAction: TextInputAction.unspecified,
+              decoration: const InputDecoration(
+                hintText: 'New task',
+                border: InputBorder.none,
               ),
             ),
-          ],
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-}
-
-class DragHandle extends StatelessWidget {
-  const DragHandle({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 50,
-      height: 6,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(50),
-        ),
+          ),
+          isShowDetailField
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TextField(
+                    controller: _detailsController,
+                    textInputAction: TextInputAction.unspecified,
+                    decoration: const InputDecoration(
+                      hintText: 'Details',
+                      border: InputBorder.none,
+                    ),
+                  ),
+                )
+              : Container(),
+          currentDate != null
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: InputChip(
+                    label: Text(formatDate(currentDate)),
+                    deleteIcon: const Icon(Icons.close_rounded),
+                    avatar: const Icon(Icons.close_rounded),
+                    onPressed: () => _setCurrentDate(null),
+                  ),
+                )
+              : Container(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    isSelected: isShowDetailField,
+                    onPressed: _setShowDetailField,
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(Icons.menu_rounded),
+                  ),
+                  IconButton(
+                    isSelected: currentDate != null,
+                    onPressed: () async {
+                      final time = await _showDatePicker(context);
+                      _setCurrentDate(time);
+                    },
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(Icons.today_rounded),
+                  ),
+                  IconButton(
+                    isSelected: onFavorite,
+                    onPressed: _setOnFavorite,
+                    padding: EdgeInsets.zero,
+                    icon: onFavorite
+                        ? const Icon(Icons.star_rounded)
+                        : const Icon(Icons.star_border_rounded),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: ElevatedButton(
+                  onPressed: _titleController.text.isNotEmpty ||
+                          _detailsController.text.isNotEmpty
+                      ? () => _addTask(tasksController)
+                          .then((_) => Navigator.pop(context))
+                      : null,
+                  child: const Text('Save'),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+        ],
       ),
     );
   }

@@ -18,71 +18,56 @@ class SQLiteRepository extends AppRepository {
       version: 2,
       onCreate: _createTables,
       onUpgrade: _upgradeTables,
-      onDowngrade: _downgradeTables,
     );
   }
 
-  Future<void> _upgradeTables(Database db, int oldVersion, int newVersion) {
-    return db.execute('''
-      DROP TABLE IF EXISTS task_lists;
-      DROP TABLE IF EXISTS tasks;
+  Future<void> _upgradeTables(
+      Database db, int oldVersion, int newVersion) async {
+    await db.execute('DROP TABLE IF EXISTS task_lists');
+    await db.execute('DROP TABLE IF EXISTS tasks');
 
+    await db.execute('''
       CREATE TABLE task_lists(
         id TEXT PRIMARY KEY,
         name TEXT 
       ); 
 
-      CREATE TABLE tasks(
+    ''');
+
+    await db.execute('''
+      CREATE TABLE tasks( 
         id TEXT PRIMARY KEY,
         title TEXT,
         details TEXT,
         time TEXT,
         completed INTEGER,
-        favorite INTEGER,
+        favorited INTEGER,
         list_id TEXT REFERENCES task_lists(id),
         trash INTEGER
       );
     ''');
   }
 
-  Future<void> _createTables(Database db, int version) {
-    return db.execute('''
+  Future<void> _createTables(Database db, int version) async {
+    await db.execute('DROP TABLE IF EXISTS task_lists');
+    await db.execute('DROP TABLE IF EXISTS tasks');
+
+    await db.execute('''
       CREATE TABLE IF NOT EXISTS task_lists(
         id TEXT PRIMARY KEY,
-        name TEXT 
-      ); 
+        name TEXT
+      );
+    ''');
 
+    await db.execute('''
       CREATE TABLE IF NOT EXISTS tasks(
         id TEXT PRIMARY KEY,
         title TEXT,
         details TEXT,
         time TEXT,
         completed INTEGER,
-        favorite INTEGER,
+        favorited INTEGER,
         list_id TEXT,
-        trash INTEGER
-      );
-    ''');
-  }
-
-  FutureOr<void> _downgradeTables(Database db, int oldVersion, int newVersion) {
-    return db.execute('''
-      DROP TABLE IF EXISTS task_lists;
-      DROP TABLE IF EXISTS tasks;
-
-      CREATE TABLE task_lists(
-        id TEXT PRIMARY KEY,
-        name TEXT 
-      ); 
-
-      CREATE TABLE tasks(
-        id TEXT PRIMARY KEY,
-        title TEXT,
-        details TEXT,
-        time TEXT,
-        completed INTEGER,
-        favorite INTEGER,
-        list_id TEXT REFERENCES task_lists(id),
         trash INTEGER
       );
     ''');
@@ -99,6 +84,7 @@ class SQLiteRepository extends AppRepository {
   Future<void> deleteTaskList(TaskList taskList) async {
     Database db = await instance.db;
     await db.delete('task_lists', where: 'id = ?', whereArgs: [taskList.id]);
+    await db.delete('tasks', where: 'list_id = ?', whereArgs: [taskList.id]);
   }
 
   @override
@@ -117,8 +103,11 @@ class SQLiteRepository extends AppRepository {
   }
 
   @override
-  Future<void> addTask(Task task) {
-    throw UnimplementedError();
+  Future<void> addTask(Task task) async {
+    Database db = await instance.db;
+
+    db.insert('tasks', task.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   @override
@@ -132,7 +121,12 @@ class SQLiteRepository extends AppRepository {
   }
 
   @override
-  Future<List<Task>> getTasks(TaskList list) {
-    throw UnimplementedError();
+  Future<List<Task>> getTasks(String listId) async {
+    Database db = await instance.db;
+
+    var tasks =
+        await db.query('tasks', where: 'list_id = ?', whereArgs: [listId]);
+    print(tasks.length);
+    return tasks.isNotEmpty ? tasks.map((e) => Task.fromMap(e)).toList() : [];
   }
 }
