@@ -1,11 +1,11 @@
-import 'package:done/src/repository/local_repository.dart';
+import 'package:done/src/repository/sqlite_repository.dart';
 import 'package:done/src/ui/app/done_app.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final repository = SQLiteRepository();
+  final repository = SQLiteRepository.instance;
 
   runApp(DoneApp(
     repository: repository,

@@ -18,6 +18,10 @@ class ProgressSection extends StatelessWidget {
         )
         .toList();
 
+    if (list.isEmpty) {
+      return Container();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

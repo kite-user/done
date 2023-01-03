@@ -1,3 +1,4 @@
+import 'package:done/src/models/task.dart';
 import 'package:done/src/models/tasklist.dart';
 
 abstract class AppRepository {
@@ -5,4 +6,9 @@ abstract class AppRepository {
   Future<void> deleteTaskList(TaskList taskList);
   Future<void> addTaskList(TaskList taskList);
   Future<void> updateTaskList(TaskList taskList);
+
+  Future<List<Task>> getTasks();
+  Future<void> deleteTask(Task task);
+  Future<void> addTask(Task task);
+  Future<void> updateTask(Task task);
 }

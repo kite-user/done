@@ -1,29 +1,25 @@
-import 'dart:io';
-
+import 'package:done/src/models/task.dart';
 import 'package:done/src/models/tasklist.dart';
 import 'package:done/src/repository/app_repository.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SQLiteRepository extends AppRepository {
   static final SQLiteRepository instance = SQLiteRepository();
 
-  static Database? _db;
+  Database? _db;
   Future<Database> get db async => _db ??= await _initDatabase();
 
   Future<Database> _initDatabase() async {
-    Directory documentDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentDirectory.path, 'done_app.db');
     return await openDatabase(
-      path,
+      join(await getDatabasesPath(), 'done_app.db'),
       version: 1,
       onCreate: _createTables,
     );
   }
 
-  Future<void> _createTables(Database db, int version) async {
-    await db.execute('''
+  Future<void> _createTables(Database db, int version) {
+    return db.execute('''
       CREATE TABLE task_lists(
         id TEXT PRIMARY KEY,
         name TEXT 
@@ -39,14 +35,16 @@ class SQLiteRepository extends AppRepository {
   }
 
   @override
-  Future<void> deleteTaskList(TaskList taskList) {
-    throw UnimplementedError();
+  Future<void> deleteTaskList(TaskList taskList) async {
+    Database db = await instance.db;
+    await db.delete('task_lists', where: 'id = ?', whereArgs: [taskList.id]);
   }
 
   @override
   Future<List<TaskList>> getTaskLists() async {
     Database db = await instance.db;
-    var taskLists = await db.query('task_lists', orderBy: 'id');
+
+    var taskLists = await db.query('task_lists');
     return taskLists.isNotEmpty
         ? taskLists.map((e) => TaskList.fromMap(e)).toList()
         : [];
@@ -54,6 +52,30 @@ class SQLiteRepository extends AppRepository {
 
   @override
   Future<void> updateTaskList(TaskList taskList) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> addTask(Task task) {
+    // TODO: implement addTask
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteTask(Task task) {
+    // TODO: implement deleteTask
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Task>> getTasks() {
+    // TODO: implement getTasks
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateTask(Task task) {
+    // TODO: implement updateTask
     throw UnimplementedError();
   }
 }

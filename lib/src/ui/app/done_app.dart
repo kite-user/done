@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DoneApp extends StatelessWidget {
-  const DoneApp({super.key, required this.repository});
+  const DoneApp({
+    super.key,
+    required this.repository,
+  });
 
   final AppRepository repository;
 
@@ -18,7 +21,7 @@ class DoneApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => TaskListsController(repository)..loadData(),
         ),
-        ChangeNotifierProvider(create: (_) => TasksController()),
+        ChangeNotifierProvider(create: (_) => TasksController(repository)),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

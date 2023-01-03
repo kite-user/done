@@ -27,20 +27,18 @@ class TaskListsController extends ChangeNotifier {
   UnmodifiableListView<TaskList> get tasklists =>
       UnmodifiableListView(_taskLists);
 
-  Future<void> addList(TaskList list) async {
-    await repository.addTaskList(list);
-    _taskLists.add(list);
-    notifyListeners();
-  }
-
   Future<void> createList(String name) async {
     final newList = TaskList(id: const Uuid().v4(), name: name);
+    await repository.addTaskList(newList);
     _taskLists.add(newList);
+
     notifyListeners();
   }
 
   Future<void> deleteList(TaskList list) async {
+    await repository.deleteTaskList(list);
     _taskLists.remove(list);
+
     notifyListeners();
   }
 }

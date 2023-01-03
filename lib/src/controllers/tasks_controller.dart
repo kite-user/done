@@ -1,32 +1,27 @@
 import 'dart:collection';
 
 import 'package:done/src/models/task.dart';
+import 'package:done/src/repository/app_repository.dart';
 import 'package:flutter/widgets.dart';
 import 'package:uuid/uuid.dart';
 
 class TasksController extends ChangeNotifier {
-  final List<Task> _tasks = [
-    ...List.generate(
-      3,
-      (index) => Task(
-        id: const Uuid().v4(),
-        title: 'Move the lawn',
-        details: 'Detail move',
-        onFavorite: true,
-      ),
-    ),
-    ...List.generate(
-      3,
-      (index) => Task(
-        id: const Uuid().v4(),
-        title: 'Move the lawn',
-        details: 'Detail move',
-        completed: true,
-      ),
-    ),
-  ];
+  final AppRepository repository;
+  final List<Task> _tasks = [];
+
+  TasksController(this.repository);
 
   UnmodifiableListView<Task> get tasks => UnmodifiableListView(_tasks);
+
+  Future loadData() async {
+    return repository.getTasks().then((data) {
+      _tasks.addAll(data);
+      notifyListeners();
+    }).catchError((err) {
+      // print(err);
+      notifyListeners();
+    });
+  }
 
   Future<void> addTask(Task task) async {
     _tasks.add(task);
