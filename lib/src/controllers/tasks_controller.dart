@@ -23,11 +23,11 @@ class TasksController extends ChangeNotifier {
   Future loadData() async {
     final listId = appState.currentListId;
     _tasks.clear();
+
     return repository.getTasks(listId).then((data) {
       _tasks.addAll(data);
       notifyListeners();
     }).catchError((err) {
-      print(err);
       notifyListeners();
     });
   }

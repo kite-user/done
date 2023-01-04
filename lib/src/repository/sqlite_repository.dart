@@ -126,7 +126,7 @@ class SQLiteRepository extends AppRepository {
 
     var tasks =
         await db.query('tasks', where: 'list_id = ?', whereArgs: [listId]);
-    print(tasks.length);
+
     return tasks.isNotEmpty ? tasks.map((e) => Task.fromMap(e)).toList() : [];
   }
 }
