@@ -105,10 +105,12 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
               ? Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: InputChip(
-                    label: Text(formatDate(currentDate)),
-                    deleteIcon: const Icon(Icons.close_rounded),
-                    avatar: const Icon(Icons.close_rounded),
-                    onPressed: () => _setCurrentDate(null),
+                    label: Text(
+                      formatDate(currentDate),
+                      style: Theme.of(context).textTheme.labelLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                    onDeleted: () => _setCurrentDate(null),
                   ),
                 )
               : Container(),

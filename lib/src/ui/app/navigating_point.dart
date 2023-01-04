@@ -1,5 +1,4 @@
 import 'package:done/src/ui/app/drawer/app_drawer.dart';
-import 'package:done/src/ui/calendar/calendar_screen.dart';
 import 'package:done/src/ui/home/home_screen.dart';
 import 'package:done/src/ui/settings/setting_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,6 @@ class _NavigatingPointState extends State<NavigatingPoint> {
 
   final views = [
     const HomeScreen(),
-    const CalendarScreen(),
     const SettingScreen(),
   ];
 
@@ -41,10 +39,6 @@ class _NavigatingPointState extends State<NavigatingPoint> {
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.today),
-            label: 'Calendar',
-          ),
-          NavigationDestination(
             icon: Icon(Icons.settings),
             label: 'Settings',
           ),
@@ -54,4 +48,4 @@ class _NavigatingPointState extends State<NavigatingPoint> {
   }
 }
 
-enum Screen { home, calendar, setting }
+enum Screen { home, setting }

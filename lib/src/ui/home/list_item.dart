@@ -1,27 +1,19 @@
 import 'package:done/src/controllers/tasks_controller.dart';
+import 'package:done/src/models/task.dart';
+import 'package:done/src/ui/task_content/task_content.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ListItem extends StatelessWidget {
   const ListItem({
     Key? key,
-    required this.id,
-    required this.title,
-    this.subtitle,
-    this.checked = false,
-    this.onFavorite = false,
+    required this.task,
   }) : super(key: key);
 
-  final String id;
-  final String title;
-  final String? subtitle;
-  final bool checked;
-  final bool onFavorite;
+  final Task task;
 
   @override
   Widget build(BuildContext context) {
-    final tasksController = context.watch<TasksController>();
-
     return Dismissible(
       key: const ValueKey('string'),
       direction: DismissDirection.startToEnd,
@@ -34,34 +26,102 @@ class ListItem extends StatelessWidget {
           color: Theme.of(context).colorScheme.onErrorContainer,
         ),
       ),
+      child: task.details == null || task.details!.isEmpty
+          ? OneLineListTile(task: task)
+          : TwoLineListTile(task: task),
+    );
+  }
+}
+
+class TwoLineListTile extends StatelessWidget {
+  const TwoLineListTile({
+    Key? key,
+    required this.task,
+  }) : super(key: key);
+
+  final Task task;
+
+  @override
+  Widget build(BuildContext context) {
+    final tasksController = context.watch<TasksController>();
+
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TaskContentScreen(task: task)),
+      ),
       child: ListTile(
         leading: IconButton(
-          icon: checked
+          icon: task.completed
               ? const Icon(Icons.check_box_rounded)
               : const Icon(Icons.check_box_outline_blank_rounded),
-          onPressed: () => tasksController.update(id, completed: !checked),
+          onPressed: () =>
+              tasksController.update(task.id, completed: !task.completed),
         ),
         title: Text(
-          title,
+          task.title,
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                decoration: checked ? TextDecoration.lineThrough : null,
+                decoration: task.completed ? TextDecoration.lineThrough : null,
                 decorationThickness: 2,
               ),
         ),
-        subtitle: subtitle != null
-            ? Text(
-                subtitle!,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      decoration: checked ? TextDecoration.lineThrough : null,
-                      decorationThickness: 1.5,
-                    ),
-              )
-            : null,
+        subtitle: Text(
+          task.details!,
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                decoration: task.completed ? TextDecoration.lineThrough : null,
+                decorationThickness: 1.5,
+              ),
+        ),
         trailing: IconButton(
-          icon: onFavorite
+          icon: task.onFavorite
               ? const Icon(Icons.star_rounded)
               : const Icon(Icons.star_border_rounded),
-          onPressed: () => tasksController.update(id, onFavorite: !onFavorite),
+          onPressed: () =>
+              tasksController.update(task.id, onFavorite: !task.onFavorite),
+        ),
+      ),
+    );
+  }
+}
+
+class OneLineListTile extends StatelessWidget {
+  const OneLineListTile({
+    Key? key,
+    required this.task,
+  }) : super(key: key);
+
+  final Task task;
+
+  @override
+  Widget build(BuildContext context) {
+    final tasksController = context.watch<TasksController>();
+
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TaskContentScreen(task: task)),
+      ),
+      child: ListTile(
+        leading: IconButton(
+          icon: task.completed
+              ? const Icon(Icons.check_box_rounded)
+              : const Icon(Icons.check_box_outline_blank_rounded),
+          onPressed: () =>
+              tasksController.update(task.id, completed: !task.completed),
+        ),
+        title: Text(
+          task.title,
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                decoration: task.completed ? TextDecoration.lineThrough : null,
+                decorationThickness: 2,
+              ),
+        ),
+        trailing: IconButton(
+          icon: task.onFavorite
+              ? const Icon(Icons.star_rounded)
+              : const Icon(Icons.star_border_rounded),
+          onPressed: () =>
+              tasksController.update(task.id, onFavorite: !task.onFavorite),
         ),
       ),
     );

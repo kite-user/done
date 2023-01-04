@@ -15,6 +15,7 @@ class TasksController extends ChangeNotifier {
   TasksController(this.repository, this.appState);
 
   UnmodifiableListView<Task> get tasks => UnmodifiableListView(_tasks);
+  bool get isEmpty => _tasks.isEmpty;
 
   void construct() => appState.addListener(() {
         loadData();

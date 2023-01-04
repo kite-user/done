@@ -1,5 +1,6 @@
 import 'package:done/src/controllers/app_state.dart';
 import 'package:done/src/controllers/tasklists_controller.dart';
+import 'package:done/src/controllers/tasks_controller.dart';
 import 'package:done/src/ui/home/bottom_sheet_content.dart';
 import 'package:done/src/ui/home/completed_section.dart';
 import 'package:done/src/ui/home/progress_section.dart';
@@ -13,6 +14,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
     final taskListController = context.watch<TaskListsController>();
+    final tasksController = context.watch<TasksController>();
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -54,14 +56,19 @@ class HomeScreen extends StatelessWidget {
             //   child: SearchBar(),
             // ),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                const ProgressSection(),
-                const CompletedSection(),
-              ],
+          if (!tasksController.isEmpty)
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  const ProgressSection(),
+                  const CompletedSection(),
+                ],
+              ),
+            )
+          else
+            const SliverToBoxAdapter(
+              child: Center(child: Text('No tasks yet')),
             ),
-          ),
         ],
       ),
     );
