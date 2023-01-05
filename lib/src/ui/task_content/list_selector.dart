@@ -1,3 +1,4 @@
+import 'package:done/src/ui/task_content/list_selection_bottom_sheet_content.dart';
 import 'package:flutter/material.dart';
 
 class ListSelector extends StatelessWidget {
@@ -15,7 +16,7 @@ class ListSelector extends StatelessWidget {
         bottom: 4,
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () => _showListSelectionBottomSheet(context),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -25,6 +26,20 @@ class ListSelector extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> _showListSelectionBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      enableDrag: false,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      builder: (context) => const ListSelectionBottomSheetContent(),
     );
   }
 }

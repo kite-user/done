@@ -48,7 +48,9 @@ class TwoLineListTile extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => TaskContentScreen(task: task)),
+        MaterialPageRoute(
+          builder: (context) => TaskContentScreen(taskId: task.id),
+        ),
       ),
       child: ListTile(
         leading: IconButton(
@@ -99,7 +101,10 @@ class OneLineListTile extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => TaskContentScreen(task: task)),
+        MaterialPageRoute(
+            builder: (context) => TaskContentScreen(
+                  taskId: task.id,
+                )),
       ),
       child: ListTile(
         leading: IconButton(

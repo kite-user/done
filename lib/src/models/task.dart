@@ -56,7 +56,7 @@ class Task extends Equatable {
       'id': id,
       'title': title,
       'details': details,
-      'time': time != null ? time.toString() : ' ',
+      'time': time != null ? time.toString() : '',
       'completed': completed,
       'favorited': onFavorite,
       'list_id': listId,
@@ -68,7 +68,7 @@ class Task extends Equatable {
         id: json['id'],
         title: json['title'],
         details: json['details'],
-        time: DateTime.parse(json['time']),
+        time: json['time'] == '' ? null : DateTime.parse(json['time']),
         completed: json['completed'] == 1,
         onFavorite: json['favorited'] == 1,
       );

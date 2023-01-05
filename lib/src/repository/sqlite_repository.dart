@@ -106,13 +106,15 @@ class SQLiteRepository extends AppRepository {
   Future<void> addTask(Task task) async {
     Database db = await instance.db;
 
-    db.insert('tasks', task.toMap(),
+    await db.insert('tasks', task.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   @override
-  Future<void> deleteTask(Task task) {
-    throw UnimplementedError();
+  Future<void> deleteTask(String taskId) async {
+    Database db = await instance.db;
+
+    await db.delete('tasks', where: 'id = ?', whereArgs: [taskId]);
   }
 
   @override
@@ -126,6 +128,8 @@ class SQLiteRepository extends AppRepository {
 
     var tasks =
         await db.query('tasks', where: 'list_id = ?', whereArgs: [listId]);
+
+    print('tasks: ${tasks.length}');
 
     return tasks.isNotEmpty ? tasks.map((e) => Task.fromMap(e)).toList() : [];
   }

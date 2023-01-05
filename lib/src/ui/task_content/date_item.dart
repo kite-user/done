@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 class DateItem extends StatelessWidget {
   const DateItem({
     Key? key,
+    required this.time,
   }) : super(key: key);
+
+  final DateTime? time;
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +21,24 @@ class DateItem extends StatelessWidget {
         children: [
           const Icon(Icons.today_rounded),
           const SizedBox(width: 16),
-          InputChip(
-            label: Text(
-              'Wed, 14 Dec',
-              style: Theme.of(context).textTheme.labelLarge,
-              textAlign: TextAlign.center,
+          if (time != null)
+            InputChip(
+              label: Text(
+                'Wed, 14 Dec',
+                style: Theme.of(context).textTheme.labelLarge,
+                textAlign: TextAlign.center,
+              ),
+              onDeleted: () {},
+              selected: false,
+            )
+          else
+            GestureDetector(
+              onTap: () {},
+              child: Text(
+                'Add date',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
-            onDeleted: () {},
-            selected: false,
-          ),
         ],
       ),
     );

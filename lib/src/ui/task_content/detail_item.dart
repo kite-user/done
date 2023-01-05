@@ -10,17 +10,25 @@ class DetailItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(
         left: 16,
-        top: 16,
-        bottom: 16,
-        right: 24,
       ),
       child: Row(
         children: [
-          const Icon(Icons.chat_bubble_outline_rounded),
+          const Icon(Icons.menu_rounded),
           const SizedBox(width: 16),
-          Text(
-            'Add details',
-            style: Theme.of(context).textTheme.bodyLarge,
+          Expanded(
+            child: TextField(
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              style: Theme.of(context).textTheme.bodyLarge,
+              decoration: InputDecoration(
+                hintText: 'Add details',
+                hintStyle: Theme.of(context).textTheme.bodyLarge,
+                contentPadding: EdgeInsets.zero,
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
           ),
         ],
       ),

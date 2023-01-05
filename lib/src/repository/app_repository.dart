@@ -8,7 +8,7 @@ abstract class AppRepository {
   Future<void> updateTaskList(TaskList taskList);
 
   Future<List<Task>> getTasks(String listId);
-  Future<void> deleteTask(Task task);
+  Future<void> deleteTask(String taskId);
   Future<void> addTask(Task task);
   Future<void> updateTask(Task task);
 }

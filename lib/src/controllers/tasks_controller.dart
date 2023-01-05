@@ -33,6 +33,12 @@ class TasksController extends ChangeNotifier {
     });
   }
 
+  Task getTask(String taskId) {
+    final index = _tasks.indexWhere((element) => element.id == taskId);
+    if (index == -1) return const Task(id: '0', title: '');
+    return _tasks[index];
+  }
+
   Future<void> _addTask(Task task) async {
     await repository.addTask(task);
 
@@ -80,6 +86,7 @@ class TasksController extends ChangeNotifier {
 
   Future<void> deleteTask(String id) async {
     final taskIndex = _tasks.indexWhere((element) => element.id == id);
+    await repository.deleteTask(id);
     _tasks.removeAt(taskIndex);
     notifyListeners();
   }
