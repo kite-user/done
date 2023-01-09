@@ -11,6 +11,11 @@ class ListSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final taskContentController = context.watch<TaskContentController>();
+    final taskListsController = context.watch<TaskListsController>();
+    final currentListId = taskContentController.listId;
+    String displayName = currentListId != null
+        ? taskListsController.getList(currentListId).name
+        : 'Not listed';
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -37,9 +42,9 @@ class ListSelector extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Text('List'),
-            Icon(Icons.arrow_drop_down_rounded),
+          children: [
+            Text(displayName),
+            const Icon(Icons.arrow_drop_down_rounded),
           ],
         ),
       ),
@@ -74,18 +79,26 @@ class ListSelectionBottomSheetContent extends StatelessWidget {
           ListView.builder(
             shrinkWrap: true,
             itemCount: selection.length,
-            itemBuilder: (_, index) => TextButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(selection[index].name),
-                  selection[index].id == taskContentController.listId
-                      ? const Icon(Icons.check_rounded)
-                      : Container()
-                ],
-              ),
-            ),
+            itemBuilder: (_, index) {
+              bool isCurrentListId =
+                  selection[index].id == taskContentController.listId;
+              return TextButton(
+                onPressed: isCurrentListId
+                    ? null
+                    : () => taskContentController
+                        .updateTask(listId: selection[index].id)
+                        .then((_) => Navigator.pop(context)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(selection[index].name),
+                    isCurrentListId
+                        ? const Icon(Icons.check_rounded)
+                        : Container()
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),

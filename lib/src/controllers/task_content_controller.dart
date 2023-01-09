@@ -50,6 +50,7 @@ class TaskContentController extends ChangeNotifier {
       completed: completed,
       onFavorite: onFavorite,
     );
+
     notifyListeners();
   }
 }

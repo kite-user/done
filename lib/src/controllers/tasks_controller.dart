@@ -11,11 +11,10 @@ class TasksController extends ChangeNotifier {
   final AppState appState;
 
   final List<Task> _tasks = [];
-
-  TasksController(this.repository, this.appState);
-
   UnmodifiableListView<Task> get tasks => UnmodifiableListView(_tasks);
   bool get isEmpty => _tasks.isEmpty;
+
+  TasksController(this.repository, this.appState);
 
   void construct() => appState.addListener(() {
         loadData();
@@ -58,7 +57,7 @@ class TasksController extends ChangeNotifier {
       details: details,
       time: time,
       onFavorite: onFavorite,
-      listId: appState.isDefaultId ? null : appState.currentListId,
+      listId: appState.currentListId,
     );
 
     _addTask(task);
@@ -73,7 +72,7 @@ class TasksController extends ChangeNotifier {
       bool? completed,
       bool? onFavorite}) async {
     final taskIndex = _tasks.indexWhere((element) => element.id == id);
-    _tasks[taskIndex] = _tasks[taskIndex].copyWith(
+    final modifiedTask = _tasks[taskIndex].copyWith(
       id: id,
       title: title,
       details: details,
@@ -83,6 +82,8 @@ class TasksController extends ChangeNotifier {
       onFavorite: onFavorite,
     );
 
+    await repository.updateTask(modifiedTask);
+    _tasks[taskIndex] = modifiedTask;
     notifyListeners();
   }
 

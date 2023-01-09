@@ -26,8 +26,6 @@ class DateItem extends StatelessWidget {
       padding: const EdgeInsets.only(
         left: 16,
         right: 24,
-        top: 16,
-        bottom: 16,
       ),
       child: Row(
         children: [
@@ -42,14 +40,17 @@ class DateItem extends StatelessWidget {
                   ),
                   onDeleted: () => taskContentController.updateTask(time: null),
                 )
-              : GestureDetector(
-                  onTap: () async {
-                    final time = await _showDatePicker(context);
-                    taskContentController.updateTask(time: time);
-                  },
-                  child: Text(
-                    'Add date',
-                    style: Theme.of(context).textTheme.bodyLarge,
+              : Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: GestureDetector(
+                    onTap: () async {
+                      final time = await _showDatePicker(context);
+                      taskContentController.updateTask(time: time);
+                    },
+                    child: Text(
+                      'Add date',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
                 ),
         ],

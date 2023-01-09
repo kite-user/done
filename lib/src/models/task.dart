@@ -23,15 +23,8 @@ class Task extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        completed,
-        onFavorite,
-        id,
-        title,
-        time,
-        details,
-        onTrash,
-      ];
+  List<Object?> get props =>
+      [id, title, details, time, completed, onFavorite, listId, onTrash];
 
   Task copyWith({
     String? id,
@@ -47,7 +40,7 @@ class Task extends Equatable {
       title: title ?? this.title,
       details: details ?? this.details,
       listId: listId ?? this.listId,
-      time: time ?? this.time,
+      time: time,
       completed: completed ?? this.completed,
       onFavorite: onFavorite ?? this.onFavorite,
     );
@@ -71,6 +64,7 @@ class Task extends Equatable {
         title: json['title'],
         details: json['details'],
         time: json['time'] == '' ? null : DateTime.parse(json['time']),
+        listId: json['list_id'],
         completed: json['completed'] == 1,
         onFavorite: json['favorited'] == 1,
       );
