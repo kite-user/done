@@ -1,4 +1,6 @@
+import 'package:done/src/controllers/task_content_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DetailItem extends StatelessWidget {
   const DetailItem({
@@ -7,6 +9,8 @@ class DetailItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final taskContentController = context.watch<TaskContentController>();
+
     return Padding(
       padding: const EdgeInsets.only(
         left: 16,
@@ -16,7 +20,10 @@ class DetailItem extends StatelessWidget {
           const Icon(Icons.menu_rounded),
           const SizedBox(width: 16),
           Expanded(
-            child: TextField(
+            child: TextFormField(
+              initialValue: taskContentController.taskDetails,
+              onChanged: (value) =>
+                  taskContentController.updateTask(details: value),
               keyboardType: TextInputType.multiline,
               maxLines: null,
               style: Theme.of(context).textTheme.bodyLarge,

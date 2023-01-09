@@ -35,6 +35,11 @@ class TaskListsController extends ChangeNotifier {
     notifyListeners();
   }
 
+  TaskList getList(String id) {
+    final index = _taskLists.indexWhere((element) => element.id == id);
+    return _taskLists[index];
+  }
+
   Future<void> deleteList(String id) async {
     int index = _taskLists.indexWhere((element) => element.id == id);
     var list = _taskLists[index];

@@ -1,15 +1,27 @@
+import 'package:done/src/controllers/task_content_controller.dart';
+import 'package:done/src/utils/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DateItem extends StatelessWidget {
   const DateItem({
     Key? key,
-    required this.time,
   }) : super(key: key);
 
-  final DateTime? time;
+  Future<DateTime?> _showDatePicker(BuildContext context) {
+    return showDatePicker(
+      context: context,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1970),
+      lastDate: DateTime(3000),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final taskContentController = context.watch<TaskContentController>();
+
     return Padding(
       padding: const EdgeInsets.only(
         left: 16,
@@ -21,24 +33,25 @@ class DateItem extends StatelessWidget {
         children: [
           const Icon(Icons.today_rounded),
           const SizedBox(width: 16),
-          if (time != null)
-            InputChip(
-              label: Text(
-                'Wed, 14 Dec',
-                style: Theme.of(context).textTheme.labelLarge,
-                textAlign: TextAlign.center,
-              ),
-              onDeleted: () {},
-              selected: false,
-            )
-          else
-            GestureDetector(
-              onTap: () {},
-              child: Text(
-                'Add date',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
+          taskContentController.time != null
+              ? InputChip(
+                  label: Text(
+                    formatDate(taskContentController.time),
+                    style: Theme.of(context).textTheme.labelLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  onDeleted: () => taskContentController.updateTask(time: null),
+                )
+              : GestureDetector(
+                  onTap: () async {
+                    final time = await _showDatePicker(context);
+                    taskContentController.updateTask(time: time);
+                  },
+                  child: Text(
+                    'Add date',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
         ],
       ),
     );

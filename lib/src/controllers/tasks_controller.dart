@@ -68,6 +68,7 @@ class TasksController extends ChangeNotifier {
   Future<void> update(String id,
       {String? title,
       String? details,
+      String? listId,
       DateTime? time,
       bool? completed,
       bool? onFavorite}) async {
@@ -77,6 +78,7 @@ class TasksController extends ChangeNotifier {
       title: title,
       details: details,
       time: time,
+      listId: listId,
       completed: completed,
       onFavorite: onFavorite,
     );

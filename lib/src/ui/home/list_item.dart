@@ -1,3 +1,5 @@
+import 'package:done/src/controllers/task_content_controller.dart';
+import 'package:done/src/controllers/tasklists_controller.dart';
 import 'package:done/src/controllers/tasks_controller.dart';
 import 'package:done/src/models/task.dart';
 import 'package:done/src/ui/task_content/task_content.dart';
@@ -43,13 +45,21 @@ class TwoLineListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final taskListsController = context.watch<TaskListsController>();
     final tasksController = context.watch<TasksController>();
 
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TaskContentScreen(taskId: task.id),
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => TaskContentController(
+              taskListsController,
+              tasksController,
+              task.id,
+            ),
+            child: const TaskContentScreen(),
+          ),
         ),
       ),
       child: ListTile(
@@ -96,15 +106,22 @@ class OneLineListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final taskListsController = context.watch<TaskListsController>();
     final tasksController = context.watch<TasksController>();
 
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => TaskContentScreen(
-                  taskId: task.id,
-                )),
+          builder: (context) => ChangeNotifierProvider(
+            create: (_) => TaskContentController(
+              taskListsController,
+              tasksController,
+              task.id,
+            ),
+            child: const TaskContentScreen(),
+          ),
+        ),
       ),
       child: ListTile(
         leading: IconButton(
