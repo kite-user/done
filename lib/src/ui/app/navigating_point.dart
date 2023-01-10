@@ -15,7 +15,7 @@ class NavigatingPoint extends StatefulWidget {
 class _NavigatingPointState extends State<NavigatingPoint> {
   int currentIndex = 0;
 
-  final views = [
+  final screens = [
     const HomeScreen(),
     const SettingScreen(),
   ];
@@ -28,10 +28,11 @@ class _NavigatingPointState extends State<NavigatingPoint> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const AppDrawer(),
-      body: views[currentIndex],
+      body: screens[currentIndex],
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: _changeIndex,
         selectedIndex: currentIndex,
+        elevation: 2,
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         destinations: const [
           NavigationDestination(

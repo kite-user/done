@@ -4,6 +4,8 @@ import 'package:done/src/controllers/tasks_controller.dart';
 import 'package:done/src/ui/home/bottom_sheet_content.dart';
 import 'package:done/src/ui/home/completed_section.dart';
 import 'package:done/src/ui/home/progress_section.dart';
+import 'package:done/src/ui/home/search_bar.dart';
+import 'package:done/src/ui/home/task_search_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +29,7 @@ class HomeScreen extends StatelessWidget {
         slivers: [
           SliverAppBar(
             floating: true,
-            pinned: true,
+            pinned: false,
             snap: false,
             elevation: 0,
             title: Text(appState.currentListName),
@@ -51,10 +53,22 @@ class HomeScreen extends StatelessWidget {
                 icon: const Icon(Icons.more_horiz_rounded),
               )
             ],
-            // bottom: const PreferredSize(
-            //   preferredSize: Size.fromHeight(50),
-            //   child: SearchBar(),
-            // ),
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(75),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: GestureDetector(
+                  onTap: () => showSearch(
+                    context: context,
+                    delegate: TaskSearchDelegate(),
+                  ),
+                  child: const SearchBar(),
+                ),
+              ),
+            ),
           ),
           if (!tasksController.isEmpty)
             SliverList(
