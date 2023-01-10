@@ -11,20 +11,21 @@ class TasksController extends ChangeNotifier {
   final AppState appState;
 
   final List<Task> _tasks = [];
-  UnmodifiableListView<Task> get tasks => UnmodifiableListView(_tasks);
-  bool get isEmpty => _tasks.isEmpty;
+  UnmodifiableListView<Task> get tasks =>
+      UnmodifiableListView(_getTasksFromCurrentList());
+
+  bool get isEmpty => _getTasksFromCurrentList().isEmpty;
 
   TasksController(this.repository, this.appState);
 
-  void construct() => appState.addListener(() {
-        loadData();
-      });
-
   Future loadData() async {
-    final listId = appState.currentListId;
     _tasks.clear();
 
-    return repository.getTasks(listId).then((data) {
+    appState.addListener(() {
+      notifyListeners();
+    });
+
+    return repository.getTasks().then((data) {
       _tasks.addAll(data);
       notifyListeners();
     }).catchError((err) {
@@ -32,9 +33,12 @@ class TasksController extends ChangeNotifier {
     });
   }
 
+  _getTasksFromCurrentList() =>
+      _tasks.where((element) => element.listId == appState.currentListId);
+
   Task getTask(String taskId) {
     final index = _tasks.indexWhere((element) => element.id == taskId);
-    if (index == -1) return const Task(id: '0', title: '');
+    if (index == -1) return const Task(id: '-', title: '');
     return _tasks[index];
   }
 
@@ -72,6 +76,7 @@ class TasksController extends ChangeNotifier {
       bool? completed,
       bool? onFavorite}) async {
     final taskIndex = _tasks.indexWhere((element) => element.id == id);
+
     final modifiedTask = _tasks[taskIndex].copyWith(
       id: id,
       title: title,
@@ -83,8 +88,31 @@ class TasksController extends ChangeNotifier {
     );
 
     await repository.updateTask(modifiedTask);
+
     _tasks[taskIndex] = modifiedTask;
     notifyListeners();
+  }
+
+  Future<void> updateWithNullableDate(String id,
+      {String? title,
+      String? details,
+      String? listId,
+      DateTime? time,
+      bool? completed,
+      bool? onFavorite}) async {
+    final taskIndex = _tasks.indexWhere((element) => element.id == id);
+    final modifiedTask = _tasks[taskIndex].copyWithNullableDate(
+      id: id,
+      title: title,
+      details: details,
+      time: time,
+      listId: listId,
+      completed: completed,
+      onFavorite: onFavorite,
+    );
+
+    await repository.updateTask(modifiedTask);
+    _tasks[taskIndex] = modifiedTask;
   }
 
   Future<void> deleteTask(String id) async {

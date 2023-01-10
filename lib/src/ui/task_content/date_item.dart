@@ -38,7 +38,8 @@ class DateItem extends StatelessWidget {
                     style: Theme.of(context).textTheme.labelLarge,
                     textAlign: TextAlign.center,
                   ),
-                  onDeleted: () => taskContentController.updateTask(time: null),
+                  onDeleted: () => taskContentController
+                      .updateTaskWithNullableDate(time: null),
                 )
               : Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),

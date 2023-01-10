@@ -23,7 +23,7 @@ void main() async {
         ),
         ChangeNotifierProvider(create: (_) => appState..loadData()),
         ChangeNotifierProvider(
-          create: (_) => TasksController(repository, appState)..construct(),
+          create: (_) => TasksController(repository, appState)..loadData(),
         ),
       ],
       child: const DoneApp(),
