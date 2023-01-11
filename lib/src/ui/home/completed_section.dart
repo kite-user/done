@@ -1,18 +1,19 @@
-import 'package:done/src/controllers/tasks_controller.dart';
+import 'package:done/src/models/task.dart';
 import 'package:done/src/ui/app/section_header.dart';
 import 'package:done/src/ui/home/list_item.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CompletedSection extends StatelessWidget {
   const CompletedSection({
     Key? key,
+    required this.tasks,
   }) : super(key: key);
+
+  final List<Task> tasks;
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<TasksController>();
-    final list = controller.tasks
+    final list = tasks
         .where(
           (element) => element.completed,
         )

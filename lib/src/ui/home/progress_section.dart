@@ -1,24 +1,25 @@
-import 'package:done/src/controllers/tasks_controller.dart';
+import 'package:done/src/models/task.dart';
 import 'package:done/src/ui/app/section_header.dart';
 import 'package:done/src/ui/home/list_item.dart';
 import 'package:done/src/utils/date_difference.dart';
 import 'package:done/src/utils/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ProgressSection extends StatelessWidget {
   const ProgressSection({
     Key? key,
+    required this.tasks,
   }) : super(key: key);
+
+  final List<Task> tasks;
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<TasksController>();
     final List<DateTime> dates = [];
 
-    if (controller.isEmpty) return Container();
+    if (tasks.isEmpty) return Container();
 
-    for (final task in controller.tasks) {
+    for (final task in tasks) {
       if (task.time != null && !dates.contains(task.time!)) {
         dates.add(task.time!);
       }
@@ -27,14 +28,16 @@ class ProgressSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const NoDateTasks(),
+        NoDateTasks(tasks: tasks),
         ListView.builder(
           padding: EdgeInsets.zero,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: dates.length,
-          itemBuilder: (context, index) =>
-              DateCategorizedTasks(date: dates[index]),
+          itemBuilder: (context, index) => DateCategorizedTasks(
+            tasks: tasks,
+            date: dates[index],
+          ),
         ),
       ],
     );
@@ -45,13 +48,14 @@ class DateCategorizedTasks extends StatelessWidget {
   const DateCategorizedTasks({
     super.key,
     required this.date,
+    required this.tasks,
   });
 
   final DateTime date;
+  final List<Task> tasks;
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<TasksController>();
-    final list = controller.tasks
+    final list = tasks
         .where((element) =>
             !element.completed &&
             element.time != null &&
@@ -82,12 +86,14 @@ class DateCategorizedTasks extends StatelessWidget {
 class NoDateTasks extends StatelessWidget {
   const NoDateTasks({
     Key? key,
+    required this.tasks,
   }) : super(key: key);
+
+  final List<Task> tasks;
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<TasksController>();
-    final list = controller.tasks
+    final list = tasks
         .where((element) => !element.completed && element.time == null)
         .toList();
 
@@ -102,9 +108,7 @@ class NoDateTasks extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: list.length,
-          itemBuilder: (context, index) => ListItem(
-            task: list[index],
-          ),
+          itemBuilder: (context, index) => ListItem(task: list[index]),
         )
       ],
     );

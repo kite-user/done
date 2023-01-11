@@ -12,9 +12,14 @@ class TasksController extends ChangeNotifier {
 
   final List<Task> _tasks = [];
   UnmodifiableListView<Task> get tasks =>
-      UnmodifiableListView(_getTasksFromCurrentList());
+      UnmodifiableListView(getTasksFromCurrentList());
 
-  bool get isEmpty => _getTasksFromCurrentList().isEmpty;
+  UnmodifiableListView<Task> getTasksWithPredicate(predicate) {
+    final result = _tasks.where(predicate);
+    return UnmodifiableListView(result);
+  }
+
+  bool get isEmpty => getTasksFromCurrentList().isEmpty;
 
   TasksController(this.repository, this.appState);
 
@@ -33,8 +38,9 @@ class TasksController extends ChangeNotifier {
     });
   }
 
-  _getTasksFromCurrentList() =>
-      _tasks.where((element) => element.listId == appState.currentListId);
+  List<Task> getTasksFromCurrentList() => _tasks
+      .where((element) => element.listId == appState.currentListId)
+      .toList();
 
   Task getTask(String taskId) {
     final index = _tasks.indexWhere((element) => element.id == taskId);

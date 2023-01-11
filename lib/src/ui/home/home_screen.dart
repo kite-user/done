@@ -1,11 +1,11 @@
 import 'package:done/src/controllers/app_state.dart';
 import 'package:done/src/controllers/tasklists_controller.dart';
-import 'package:done/src/controllers/tasks_controller.dart';
 import 'package:done/src/ui/home/bottom_sheet_content.dart';
-import 'package:done/src/ui/home/completed_section.dart';
-import 'package:done/src/ui/home/progress_section.dart';
+import 'package:done/src/ui/home/favorites_list/favorites_list_body.dart';
+import 'package:done/src/ui/home/personal_list/personal_list_body.dart';
 import 'package:done/src/ui/home/search_bar.dart';
 import 'package:done/src/ui/home/task_search_delegate.dart';
+import 'package:done/src/ui/home/today_list/today_list_body.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
     final taskListController = context.watch<TaskListsController>();
-    final tasksController = context.watch<TasksController>();
+    final currentListId = appState.currentListId;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -70,19 +70,12 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          if (!tasksController.isEmpty)
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  const ProgressSection(),
-                  const CompletedSection(),
-                ],
-              ),
-            )
+          if (currentListId == 'today')
+            const TodayListBody()
+          else if (currentListId == 'favorites')
+            const FavoritesListBody()
           else
-            const SliverToBoxAdapter(
-              child: Center(child: Text('No tasks yet')),
-            ),
+            const PersonalListBody()
         ],
       ),
     );

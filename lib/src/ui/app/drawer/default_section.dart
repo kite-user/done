@@ -23,12 +23,6 @@ class DefaultSection extends StatelessWidget {
           icon: Icon(Icons.star_border_rounded),
           badge: 0,
         ),
-        ListItem(
-          id: 'trash',
-          title: 'Trash',
-          icon: Icon(Icons.delete_outline_rounded),
-          badge: 0,
-        ),
       ],
     );
   }
