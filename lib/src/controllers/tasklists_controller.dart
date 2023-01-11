@@ -10,9 +10,7 @@ class TaskListsController extends ChangeNotifier {
 
   final List<TaskList> _taskLists = [];
 
-  TaskListsController(
-    this.repository,
-  );
+  TaskListsController(this.repository);
 
   Future loadData() async {
     return repository.getTaskLists().then((data) {

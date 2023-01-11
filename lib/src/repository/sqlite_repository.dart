@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:done/src/models/sub_task.dart';
 import 'package:done/src/models/task.dart';
 import 'package:done/src/models/tasklist.dart';
 import 'package:done/src/repository/app_repository.dart';
@@ -25,6 +26,7 @@ class SQLiteRepository extends AppRepository {
       Database db, int oldVersion, int newVersion) async {
     await db.execute('DROP TABLE IF EXISTS task_lists');
     await db.execute('DROP TABLE IF EXISTS tasks');
+    await db.execute('DROP TABLE IF EXISTS sub_tasks');
 
     await db.execute('''
       CREATE TABLE task_lists(
@@ -46,11 +48,23 @@ class SQLiteRepository extends AppRepository {
         trash INTEGER
       );
     ''');
+
+    await db.execute('''
+      CREATE TABLE sub_tasks(
+        id TEXT PRIMARY KEY,
+        content TEXT, 
+        completed INTEGER,
+        trash INTEGER,
+        task_id TEXT REFERENCES tasks(id)
+      ); 
+
+    ''');
   }
 
   Future<void> _createTables(Database db, int version) async {
     await db.execute('DROP TABLE IF EXISTS task_lists');
     await db.execute('DROP TABLE IF EXISTS tasks');
+    await db.execute('DROP TABLE IF EXISTS sub_tasks');
 
     await db.execute('''
       CREATE TABLE IF NOT EXISTS task_lists(
@@ -70,6 +84,17 @@ class SQLiteRepository extends AppRepository {
         list_id TEXT,
         trash INTEGER
       );
+    ''');
+
+    await db.execute('''
+      CREATE TABLE sub_tasks(
+        id TEXT PRIMARY KEY,
+        content TEXT, 
+        completed INTEGER,
+        trash INTEGER,
+        task_id TEXT REFERENCES tasks(id)
+      ); 
+
     ''');
   }
 
@@ -92,9 +117,9 @@ class SQLiteRepository extends AppRepository {
     Database db = await instance.db;
 
     var taskLists = await db.query('task_lists');
-    return taskLists.isNotEmpty
-        ? taskLists.map((e) => TaskList.fromMap(e)).toList()
-        : [];
+    return taskLists.isEmpty
+        ? []
+        : taskLists.map((e) => TaskList.fromMap(e)).toList();
   }
 
   @override
@@ -115,6 +140,7 @@ class SQLiteRepository extends AppRepository {
     Database db = await instance.db;
 
     await db.delete('tasks', where: 'id = ?', whereArgs: [taskId]);
+    await db.delete('sub_tasks', where: 'task_id = ?', whereArgs: [taskId]);
   }
 
   @override
@@ -126,12 +152,45 @@ class SQLiteRepository extends AppRepository {
   }
 
   @override
-  Future<List<Task>> getTasks(String listId) async {
+  Future<List<Task>> getTasks() async {
     Database db = await instance.db;
 
-    var tasks =
-        await db.query('tasks', where: 'list_id = ?', whereArgs: [listId]);
-
+    var tasks = await db.query('tasks');
     return tasks.isNotEmpty ? tasks.map((e) => Task.fromMap(e)).toList() : [];
+  }
+
+  @override
+  Future<void> addSubTask(SubTask subTask) async {
+    Database db = await instance.db;
+
+    await db.insert('sub_tasks', subTask.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  @override
+  Future<void> deleteSubTask(String id) async {
+    Database db = await instance.db;
+    await db.delete('sub_tasks', where: 'id = ?', whereArgs: [id]);
+  }
+
+  @override
+  Future<List<SubTask>> getSubTasks(String taskId) async {
+    Database db = await instance.db;
+    var subTasks = await db.query(
+      'sub_tasks',
+      where: 'task_id = ?',
+      whereArgs: [taskId],
+    );
+
+    return subTasks.isEmpty
+        ? []
+        : subTasks.map((e) => SubTask.fromMap(e)).toList();
+  }
+
+  @override
+  Future<void> updateSubTask(SubTask subTask) async {
+    Database db = await instance.db;
+    await db.update('sub_tasks', subTask.toMap(),
+        where: 'id = ?', whereArgs: [subTask.id]);
   }
 }

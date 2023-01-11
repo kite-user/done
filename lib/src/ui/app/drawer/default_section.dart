@@ -1,5 +1,4 @@
 import 'package:done/src/ui/app/drawer/list_item.dart';
-import 'package:done/src/ui/app/section_header.dart';
 import 'package:flutter/material.dart';
 
 class DefaultSection extends StatelessWidget {
@@ -12,9 +11,6 @@ class DefaultSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
-        SectionHeader(
-          title: 'Default',
-        ),
         ListItem(
           id: 'today',
           title: 'Today',

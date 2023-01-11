@@ -16,13 +16,13 @@ class ProgressSection extends StatelessWidget {
     final controller = context.watch<TasksController>();
     final List<DateTime> dates = [];
 
+    if (controller.isEmpty) return Container();
+
     for (final task in controller.tasks) {
       if (task.time != null && !dates.contains(task.time!)) {
         dates.add(task.time!);
       }
     }
-
-    if (dates.isEmpty) return Container();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

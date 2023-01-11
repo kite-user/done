@@ -40,6 +40,26 @@ class Task extends Equatable {
       title: title ?? this.title,
       details: details ?? this.details,
       listId: listId ?? this.listId,
+      time: time ?? this.time,
+      completed: completed ?? this.completed,
+      onFavorite: onFavorite ?? this.onFavorite,
+    );
+  }
+
+  Task copyWithNullableDate({
+    String? id,
+    String? title,
+    String? details,
+    String? listId,
+    DateTime? time,
+    bool? completed,
+    bool? onFavorite,
+  }) {
+    return Task(
+      id: id ?? const Uuid().v4(),
+      title: title ?? this.title,
+      details: details ?? this.details,
+      listId: listId ?? this.listId,
       time: time,
       completed: completed ?? this.completed,
       onFavorite: onFavorite ?? this.onFavorite,
