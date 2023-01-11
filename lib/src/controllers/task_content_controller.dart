@@ -108,6 +108,7 @@ class TaskContentController extends ChangeNotifier {
     final index = _subTasks.indexWhere((element) => element.id == id);
 
     final modified = _subTasks[index].copyWith(
+      id: id,
       content: content,
       completed: completed,
       onTrash: onTrash,
@@ -124,6 +125,7 @@ class TaskContentController extends ChangeNotifier {
 
     await repository.deleteSubTask(id);
     _subTasks.removeAt(index);
+
     notifyListeners();
   }
 }

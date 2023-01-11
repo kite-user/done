@@ -182,8 +182,6 @@ class SQLiteRepository extends AppRepository {
       whereArgs: [taskId],
     );
 
-    print(subTasks.first['content']);
-
     return subTasks.isEmpty
         ? []
         : subTasks.map((e) => SubTask.fromMap(e)).toList();
@@ -192,7 +190,6 @@ class SQLiteRepository extends AppRepository {
   @override
   Future<void> updateSubTask(SubTask subTask) async {
     Database db = await instance.db;
-    print(subTask.content);
     await db.update('sub_tasks', subTask.toMap(),
         where: 'id = ?', whereArgs: [subTask.id]);
   }

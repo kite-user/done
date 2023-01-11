@@ -25,7 +25,9 @@ class SubtasksItem extends StatelessWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: subTasks.length,
-                  itemBuilder: (_, index) => SubTaskItem(item: subTasks[index]),
+                  itemBuilder: (_, index) => SubTaskItem(
+                    item: subTasks[index],
+                  ),
                 ),
               )
             : Container(),
@@ -61,27 +63,32 @@ class SubTaskItem extends StatelessWidget {
     final controller = context.watch<TaskContentController>();
     final completed = item.completed;
     final content = item.content;
+    final id = item.id;
 
     return ListTile(
       leading: IconButton(
         onPressed: completed
-            ? () => controller.updateSubTask(item.id, completed: false)
-            : () => controller.updateSubTask(item.id, completed: true),
+            ? () => controller.updateSubTask(id, completed: false)
+            : () => controller.updateSubTask(id, completed: true),
         icon: completed
             ? const Icon(Icons.check_box_rounded)
             : const Icon(Icons.check_box_outline_blank_rounded),
       ),
       title: TextFormField(
         initialValue: content,
-        style: Theme.of(context).textTheme.bodyLarge,
-        onChanged: (value) => controller.updateSubTask(item.id, content: value),
+        minLines: null,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              decoration: completed ? TextDecoration.lineThrough : null,
+              decorationThickness: 1.5,
+            ),
+        onChanged: (value) => controller.updateSubTask(id, content: value),
         decoration: const InputDecoration(
           hintText: 'Add content',
           border: InputBorder.none,
         ),
       ),
       trailing: IconButton(
-        onPressed: () => controller.deleteSubTask(item.id),
+        onPressed: () => controller.deleteSubTask(id),
         icon: const Icon(Icons.close_rounded),
       ),
     );
