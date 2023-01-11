@@ -19,7 +19,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => TaskListsController(repository)..loadData(),
+          create: (_) => TaskListsController(repository, appState)..loadData(),
         ),
         ChangeNotifierProvider(create: (_) => appState..loadData()),
         ChangeNotifierProvider(

@@ -1,4 +1,4 @@
-import 'package:done/src/ui/app/drawer/bottom_sheet_content.dart';
+import 'package:done/src/ui/app/drawer/add_list_bottom_sheet.dart';
 import 'package:done/src/ui/app/drawer/default_section.dart';
 import 'package:done/src/ui/app/drawer/personal_section.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +89,7 @@ class AppDrawer extends StatelessWidget {
           builder: (BuildContext context) {
             return Padding(
               padding: MediaQuery.of(context).viewInsets,
-              child: const BottomSheetContent(),
+              child: const AddListBottomSheet(),
             );
           },
         );

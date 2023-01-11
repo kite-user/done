@@ -123,8 +123,11 @@ class SQLiteRepository extends AppRepository {
   }
 
   @override
-  Future<void> updateTaskList(TaskList taskList) {
-    throw UnimplementedError();
+  Future<void> updateTaskList(TaskList taskList) async {
+    Database db = await instance.db;
+
+    await db.update('task_lists', taskList.toMap(),
+        where: 'id = ?', whereArgs: [taskList.id]);
   }
 
   @override

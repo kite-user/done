@@ -2,14 +2,14 @@ import 'package:done/src/controllers/tasklists_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BottomSheetContent extends StatefulWidget {
-  const BottomSheetContent({super.key});
+class AddListBottomSheet extends StatefulWidget {
+  const AddListBottomSheet({super.key});
 
   @override
-  State<BottomSheetContent> createState() => _BottomSheetContentState();
+  State<AddListBottomSheet> createState() => _AddListBottomSheetState();
 }
 
-class _BottomSheetContentState extends State<BottomSheetContent> {
+class _AddListBottomSheetState extends State<AddListBottomSheet> {
   late TextEditingController _inputController;
 
   @override

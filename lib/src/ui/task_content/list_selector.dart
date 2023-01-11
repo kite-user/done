@@ -35,7 +35,7 @@ class ListSelector extends StatelessWidget {
                 topRight: Radius.circular(16),
               ),
             ),
-            builder: (context) => ListSelectionBottomSheetContent(
+            builder: (context) => ListSelectionBottomSheet(
                 taskContentController: taskContentController),
           );
         },
@@ -52,8 +52,8 @@ class ListSelector extends StatelessWidget {
   }
 }
 
-class ListSelectionBottomSheetContent extends StatelessWidget {
-  const ListSelectionBottomSheetContent({
+class ListSelectionBottomSheet extends StatelessWidget {
+  const ListSelectionBottomSheet({
     Key? key,
     required this.taskContentController,
   }) : super(key: key);

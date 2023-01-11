@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:done/src/controllers/app_state.dart';
 import 'package:done/src/models/task.dart';
 import 'package:done/src/repository/app_repository.dart';
+import 'package:done/src/utils/is_today.dart';
 import 'package:flutter/widgets.dart';
 import 'package:uuid/uuid.dart';
 
@@ -67,7 +68,7 @@ class TasksController extends ChangeNotifier {
       details: details,
       time: time,
       onFavorite: onFavorite,
-      listId: appState.currentListId,
+      listId: appState.isDefaultId ? null : appState.currentListId,
     );
 
     _addTask(task);
@@ -125,6 +126,34 @@ class TasksController extends ChangeNotifier {
     final taskIndex = _tasks.indexWhere((element) => element.id == id);
     await repository.deleteTask(id);
     _tasks.removeAt(taskIndex);
+    notifyListeners();
+  }
+
+  Future<void> deleteCompledTasksInCurrentList() async {
+    List<Task> completed = [];
+
+    switch (appState.currentListId) {
+      case 'today':
+        completed.addAll(_tasks.where((element) =>
+            element.completed &&
+            element.time != null &&
+            isToday(element.time)));
+        break;
+      case 'favorites':
+        completed.addAll(
+            _tasks.where((element) => element.completed && element.onFavorite));
+        break;
+      default:
+        completed.addAll(_tasks.where((element) =>
+            element.completed && element.listId == appState.currentListId));
+        break;
+    }
+
+    for (var task in completed) {
+      await deleteTask(task.id);
+      _tasks.remove(task);
+    }
+
     notifyListeners();
   }
 }

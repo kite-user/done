@@ -6,6 +6,7 @@ class AppState extends ChangeNotifier {
 
   AppState(this._prefs);
   List<String> get defaultId => ['today', 'favorites', 'trash'];
+  bool get isDefaultId => defaultId.contains(currentListId);
 
   Map<String, String> _currentList = {'id': 'today', 'name': 'Today'};
   String get currentListId => _currentList['id'] ?? '';
@@ -20,6 +21,11 @@ class AppState extends ChangeNotifier {
 
   void changeListId({id, name}) {
     _currentList = {'id': id, 'name': name};
+    notifyListeners();
+  }
+
+  void changeToTodayList() {
+    _currentList = {'id': 'today', 'name': 'Today'};
     notifyListeners();
   }
 

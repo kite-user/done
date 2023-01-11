@@ -3,16 +3,19 @@ import 'package:done/src/utils/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BottomSheetContent extends StatefulWidget {
-  const BottomSheetContent({
+class AddTaskBottomSheet extends StatefulWidget {
+  const AddTaskBottomSheet({
     Key? key,
+    required this.listId,
   }) : super(key: key);
 
+  final String listId;
+
   @override
-  State<BottomSheetContent> createState() => _BottomSheetContentState();
+  State<AddTaskBottomSheet> createState() => _AddTaskBottomSheetState();
 }
 
-class _BottomSheetContentState extends State<BottomSheetContent> {
+class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   var isShowDetailField = false;
 
   late TextEditingController _titleController;
@@ -24,6 +27,9 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
   @override
   initState() {
     super.initState();
+    currentDate = widget.listId == 'today' ? DateTime.now() : null;
+    onFavorite = widget.listId == 'favorites';
+
     _titleController = TextEditingController()
       ..addListener(() {
         setState(() {});

@@ -1,7 +1,8 @@
 import 'package:done/src/controllers/app_state.dart';
 import 'package:done/src/controllers/tasklists_controller.dart';
-import 'package:done/src/ui/home/bottom_sheet_content.dart';
+import 'package:done/src/ui/home/add_task_bottom_sheet.dart';
 import 'package:done/src/ui/home/favorites_list/favorites_list_body.dart';
+import 'package:done/src/ui/home/more_bottom_sheet.dart';
 import 'package:done/src/ui/home/personal_list/personal_list_body.dart';
 import 'package:done/src/ui/home/search_bar.dart';
 import 'package:done/src/ui/home/task_search_delegate.dart';
@@ -21,7 +22,8 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddTaskBottomSheet(context),
+        onPressed: () =>
+            _showAddTaskBottomSheet(context, appState.currentListId),
         label: const Text('Add'),
         icon: const Icon(Icons.add),
       ),
@@ -39,17 +41,8 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.menu),
             ),
             actions: [
-              !appState.defaultId.contains(appState.currentListId)
-                  ? IconButton(
-                      onPressed: () {
-                        taskListController.deleteList(appState.currentListId);
-                        appState.changeListId(id: 'today', name: 'Today');
-                      },
-                      icon: const Icon(Icons.delete_rounded),
-                    )
-                  : Container(),
               IconButton(
-                onPressed: () {},
+                onPressed: () => _showMoreBottomSheet(context),
                 icon: const Icon(Icons.more_horiz_rounded),
               )
             ],
@@ -81,7 +74,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Future<dynamic> _showAddTaskBottomSheet(BuildContext context) {
+  Future<dynamic> _showMoreBottomSheet(BuildContext context) {
     return showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -104,7 +97,38 @@ class HomeScreen extends StatelessWidget {
           builder: (BuildContext context) {
             return Padding(
               padding: MediaQuery.of(context).viewInsets,
-              child: const BottomSheetContent(),
+              child: const MoreBottomSheet(),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<dynamic> _showAddTaskBottomSheet(BuildContext context, String listId) {
+    return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      enableDrag: false,
+      builder: (context) {
+        return BottomSheet(
+          enableDrag: false,
+          onClosing: () {},
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
+          ),
+          builder: (BuildContext context) {
+            return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: AddTaskBottomSheet(listId: listId),
             );
           },
         );
