@@ -25,9 +25,6 @@ class SettingScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const ThemeScreen()),
                 ),
               ),
-              const SettingsItem(
-                title: 'Notifications',
-              ),
             ],
           ),
         ),
